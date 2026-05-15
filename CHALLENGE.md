@@ -71,6 +71,7 @@ Dentro de QEMU, ejecuta estos comandos y copia la salida:
 uname -r
 
 # ¿El módulo vulnerable está cargado?
+#El hecho de que el comando cat /proc/crypto | grep -i aead no devuelva resultados es el comportamiento esperado del sistema en su estado inicial. Esto ocurre debido a la arquitectura de optimización del kernel de Linux conocida como Lazy Loading (carga dinámica). Para ahorrar memoria RAM, el sistema operativo no carga los módulos de criptografía (algif_aead) durante el arranque. Estos permanecen inactivos hasta que un proceso en el espacio de usuario (user-space) solicita explícitamente abrir un socket criptográfico del tipo AF_ALG. Por lo tanto, la vulnerabilidad CVE-2026-31431 está presente en el núcleo compilado, pero permanece latente hasta que la ejecución del exploit fuerza al kernel a cargar el módulo vulnerable en la memoria.
 lsmod | grep alg
 
 # ¿Cuál es tu identidad actual? (debe ser student, NO root) student
