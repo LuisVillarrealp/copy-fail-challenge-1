@@ -81,3 +81,12 @@ copy-fail-challenge/
 ---
 
 *Basado en CVE-2026-31431 descubierto por Theori / Xint Code. Divulgado el 29 de abril de 2026.*
+
+COMO RESOLVER EL ERROR QEMU:
+cambiar la linea 35 del qemu agregando el "-1" al challenge, debido a que ese es el nombre del archivo
+Instalar los paquetes que generan error
+apt-get update && apt-get install -y zstd lz4
+apt-get update && apt-get install -y xz-utils
+make kernel
+make roofts
+make qemu
