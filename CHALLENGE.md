@@ -67,17 +67,17 @@ Deberías ver el prompt: `[student@copy-fail-TuNombre ~]$`
 Dentro de QEMU, ejecuta estos comandos y copia la salida:
 
 ```sh
-# ¿Qué kernel corre?
+# ¿Qué kernel corre? 6.12.0
 uname -r
 
 # ¿El módulo vulnerable está cargado?
 lsmod | grep alg
 
-# ¿Cuál es tu identidad actual? (debe ser student, NO root)
+# ¿Cuál es tu identidad actual? (debe ser student, NO root) student
 id
 whoami
 
-# ¿AF_ALG está disponible?
+# ¿AF_ALG está disponible? no
 cat /proc/modules | grep algif
 ```
 
