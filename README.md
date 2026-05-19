@@ -92,7 +92,7 @@ make roofts
 make qemu
 Evidencias
 Para esta práctica trabajé con el CVE-2026-31431, conocido como Copy Fail. Es una vulnerabilidad real del kernel Linux descubierta en 2026 que permite a cualquier usuario sin privilegios obtener acceso root. Lo interesante es que el bug existe desde 2017 pero nadie lo notó hasta ahora.
-Instalé Ubuntu 20.04 LTS en una máquina virtual usando VirtualBox. Esta versión trae el kernel 5.15 que es vulnerable. Para abrir la terminal tuve un problema porque la terminal por defecto no funcionaba, así que instalé Tilix que es una terminal alternativa. También tuve que instalar Python 3.10 desde el código fuente porque Ubuntu 20.04 solo trae Python 3.8 y el exploit necesita la versión 3.10 para usar la función os.splice.
+Instalé Ubuntu 20.04.6 LTS en una máquina virtual usando VirtualBox. Esta versión trae el kernel 5.15 que es vulnerable. Para abrir la terminal tuve un problema porque la terminal por defecto no funcionaba, así que instalé Tilix que es una terminal alternativa. También tuve que instalar Python 3.10 desde el código fuente porque Ubuntu 20.04 solo trae Python 3.8 y el exploit necesita la versión 3.10 para usar la función os.splice.
 ![alt text](image.png)
  Hito 1 — Confirmar el kernel vulnerable
 Confirmé que el sistema corría el kernel 5.15.0-139 que es anterior al parche de abril 2026. También verifiqué mi identidad como usuario normal sin privilegios de root.
