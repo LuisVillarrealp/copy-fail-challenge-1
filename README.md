@@ -90,3 +90,23 @@ apt-get update && apt-get install -y xz-utils
 make kernel
 make roofts
 make qemu
+Evidencias
+Para esta práctica trabajé con el CVE-2026-31431, conocido como Copy Fail. Es una vulnerabilidad real del kernel Linux descubierta en 2026 que permite a cualquier usuario sin privilegios obtener acceso root. Lo interesante es que el bug existe desde 2017 pero nadie lo notó hasta ahora.
+Instalé Ubuntu 20.04 LTS en una máquina virtual usando VirtualBox. Esta versión trae el kernel 5.15 que es vulnerable. Para abrir la terminal tuve un problema porque la terminal por defecto no funcionaba, así que instalé Tilix que es una terminal alternativa. También tuve que instalar Python 3.10 desde el código fuente porque Ubuntu 20.04 solo trae Python 3.8 y el exploit necesita la versión 3.10 para usar la función os.splice.
+![alt text](image.png)
+ Hito 1 — Confirmar el kernel vulnerable
+Confirmé que el sistema corría el kernel 5.15.0-139 que es anterior al parche de abril 2026. También verifiqué mi identidad como usuario normal sin privilegios de root.
+![alt text](image-1.png)  ![alt text](image-14.png)
+ Hito 2 — Ejecutar el exploit
+Descargué el exploit de copy.fail que es un script de Python de 732 bytes. Lo ejecuté como usuario normal y obtuve acceso root. El exploit funciona usando AF_ALG más authencesn más splice para escribir 4 bytes en el page cache de /usr/bin/su que es un binario con permisos setuid, y cuando se ejecuta corre como root automáticamente.
+ ![![alt text](image-4.png)](image-3.png)![alt text](image-15.png)
+   ![alt text](image-5.png)
+Hito 3 — Mitigación temporal
+Intenté descargar el módulo algif_aead con rmmod pero el sistema me dijo que no estaba cargado como módulo porque en este kernel está compilado de forma estática. Apliqué la mitigación alternativa creando el archivo /etc/modprobe.d/disable-algif.conf para bloquear el módulo en futuros arranques.
+![alt text](image-6.png)![alt text](image-7.png)
+   ![alt text](image-8.png)
+Hito 4 — Parche permanente
+Instalé el código fuente del kernel Linux 5.4 que estaba disponible en el sistema. Abrí el archivo crypto/algif_aead.c y busqué la función aead_request_set_crypt. Cambié el argumento rsgl_src por areq->tsgl, que es exactamente el fix oficial. Esto separa el scatterlist de entrada del de salida, eliminando la posibilidad de que authencesn escriba en las páginas del page cache. Generé el parche con diff para documentar el cambio.
+![alt text](image-9.png)![alt text](image-10.png)![alt text](image-11.png)![alt text](image-12.png)![alt text](image-13.png)
+     Conclusión
+Lo más impresionante de esta vulnerabilidad es que no fue un solo error sino la combinación de tres cambios que parecían correctos por separado en 2011, 2015 y 2017. Nadie vio el sistema completo hasta 2026. Esto demuestra que en sistemas complejos como el kernel Linux la seguridad no depende solo de que cada parte funcione bien sino de cómo interactúan entre ellas.
